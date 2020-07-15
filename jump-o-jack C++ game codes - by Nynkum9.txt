@@ -1,0 +1,116 @@
+#include<iostream.h>
+#include<stdlib.h>
+#include<stdio.h>
+#include<windows.h>
+#include<stddef.h>
+#include<conio.h>
+#include<iomanip.h>
+#include<process.h>
+//#include<fstream.h>
+const int actualwidth=80;                                                                //x width
+const int jacky=8;                                                                 //y height
+const int jackx=75;
+const int jackpos=5;
+//int t=0;
+int jumppos=jacky-1;
+int op=jackx;
+int mp=jackx;
+int obstacle()
+{  randomize();return random(7-5+1)+5;
+
+}
+int newobstacle()
+{
+  randomize();return random(20-11+1)+11;
+}
+void jumpgrid(int pass,int obsta, int npass=jackx,int obsta2=0)
+{  for(int p=0;p<jacky;p++)
+
+	 {for(int fool=0;fool<actualwidth;fool++)
+
+		 {
+			 cout<<"_";
+
+		 }
+			cout<<endl;
+	}
+
+  
+
+for(int q=0;q<jacky;q++)
+	{
+	  for(int v=0;v<jackx;v++)
+		{   if(v==(npass)&&(q>=obsta2))
+				{    if(q!=(jumppos))
+					  cout<<" !";
+					  else cout<<"!";
+
+			  }
+
+			 if((v==jackpos)&&(q==jacky-1))
+			  {
+							cout<<"o";
+
+				}
+
+
+			 if(v==(pass)&&(q>=obsta))
+				{    if(q!=(jumppos))
+					  cout<<" !";
+					  else cout<<"!";
+
+			  }
+
+
+				 else cout<<" ";
+
+
+
+
+
+
+		}cout<<endl;
+
+	}
+	for(int floorz=0;floorz<actualwidth;floorz++)cout<<"#";
+
+
+}
+
+
+int main()
+{
+
+	int obsta=obstacle();
+do{
+	int nextobsta=newobstacle();
+	while(op>nextobsta)
+	{  clrscr();
+		--op;
+		jumpgrid(op,obsta,mp);
+		for(int long blaz=0;blaz<9999999;blaz++);
+
+	}
+	int obsta2=obstacle() ;
+	int nextobsta2=newobstacle();
+	 while(op>0&&mp>nextobsta2)
+	 { clrscr();
+	  --mp;
+		--op;
+		jumpgrid(op,obsta,mp,obsta2);
+		for(int long blaz=0;blaz<9999999;blaz++);
+
+	}op=jackx;
+	while(mp>0&&op>0)
+	{ clrscr();
+	  --mp;
+		--op;
+		jumpgrid(op,obsta,mp,obsta2);
+		for(int long blaz=0;blaz<9999999;blaz++);
+
+	}
+	}while(jumppos==jacky-1);
+
+
+return 0;
+}

@@ -1,0 +1,761 @@
+#include<iostream.h>                            //GAME BOX final
+#include<fstream.h>			       //y height					      							//y height
+#include<stdlib.h>                                                   //x width
+#include<string.h>
+#include<conio.h>
+#include<windows.h>
+#include<stdio.h>
+#include<time.h>
+#include<process.h>
+#include<iomanip.h>
+
+const int width = 20;                             //game-1 variables & constants
+const int height = 10;
+int gameover1=0;
+int clearlvl1=0;
+int long score=0;
+int store=0;                               
+int x=(width/2),y=(height/2);                        
+
+const int jacky=8;                             //game-2 variables & constants
+const int jackx=75;
+const int jackpos=5;
+int choice2,choice1;
+int gameover2=0;
+int jumppos=jacky-1;
+int op=jackx;
+int mp=jackx;
+char spot='x';
+int score2=0;
+
+int hunt,az;                 //common variables
+int long timeit=9999999;
+char me;                     //*
+const int actualwidth=80;                         
+const int actualheight=25;
+
+void medieval();         //important funtions
+void jumper();
+void play1();
+void play2();
+void highscore1();
+void highscore2();
+void menu();
+void SHOW();
+
+class playgame2                                  //class for game2 (jumper jack)
+				 {  char name2[25];
+					 int gamescore2;
+					 char look;
+					 public:
+				  void getscore2(int score2,char lookz)
+					 {    gamescore2=score2;
+							  look=lookz;
+					 }
+				  void showplay2()
+					{cout<<endl<<"player name       :-";puts(name2);
+							 cout<<"obstacles crossed :-"<<gamescore2<<endl;
+							 cout<<"player hero       :-"<<look<<endl;
+					}
+					void getname2(char* obj2)
+				  {
+					 strcpy(name2,obj2);
+				  }
+
+					char* showname2()
+					{
+					 return name2;
+					}
+					int showscore2()
+					{
+					  return gamescore2;
+					}
+					void modify2(playgame2 o1)
+					{
+						gamescore2=o1.gamescore2;
+								look=o1.look;
+					}
+				  }ply2,prev2,dump2;
+
+class playgame1                             //class for game 1 (medieval hunter)
+			{
+				  char name[25];
+				  int gamescore;
+				  char look1;
+				  public:
+              void getname()
+						{
+						  cout<<"\t\t\t\tname your game character "<<endl;
+
+						  gets(name);
+						}
+				  void getname1(char* obj1)
+				  {  strcpy(name,obj1);
+
+				  }
+					char* showname1()
+					{
+						return name;
+					}
+					int showscore()
+					 {
+						return gamescore;
+					 }
+
+					char showlook()
+					{
+						return look1;
+					}
+
+					void getscore(int store,char lookz)
+				  {    gamescore=store;
+								look1=lookz;
+				  }
+				  void showplayers()
+				  {cout<<endl<<"player name       :-";puts(name);
+							cout<<"moves to complete :-"<<gamescore<<endl;
+							cout<<"player hero       :-"<<look1<<endl;
+				  }
+				  void modify1(playgame1 o1)
+				  {
+						gamescore=o1.gamescore;
+						look1=o1.look1;
+				  }
+
+				  }ply,prev,dump;
+
+void callcharacter()                                  //character customization
+  {
+	 cout<<"enter 1 if you want hunter SUBZERO the freezer..........'O'"<<endl;
+	 cout<<"enter 2 if you want hunter HELIX the barbarian..........'H'"<<endl;
+	 cout<<"enter 3 if you want hunter AGENT X the secret agent.....'X'"<<endl;
+	 cin>> hunt;
+	 cout<<"your have selected ";
+	 switch(hunt)
+	 {case 1: cout<<"SUBZERO";
+	 case 2: cout<<"HELIX";
+	 case 3: cout<<"AGENT X";
+	 }
+	 cout<<endl<<"wait for loading";
+	 for(long int incr=0;incr<timeit;incr++);cout<<"..";
+	 for(incr=0;incr<timeit;incr++);cout<<"...";
+	 for(incr=0;incr<timeit;incr++);
+	 clrscr();
+
+ }
+char hunter(int hunt)
+	 { if(hunt==1)
+			 return 'O';
+		 else if(hunt==2)
+			 return 'H';
+		 else if(hunt==3)
+			 return 'X';
+		 else return 'V';
+	  }
+int obstacle()
+{  randomize();return random(6-5+1)+5;
+
+}
+int newobstacle()
+{
+  randomize();return random(38-26+1)+26;
+}
+void calljumpover()
+{
+		for(int long blaz=0;blaz<timeit;blaz++);
+		clrscr();
+		for(int p=0;p<actualheight;p++)
+
+	 {
+		for(int flun=0;flun<actualwidth;flun++)
+		 {
+				if(p==actualheight/2&&flun==((actualwidth-18)/2))
+				{cout<<"obstacles took u down";break;}
+				else cout<<" ";
+
+		 }
+	 }
+	  for(blaz=0;blaz<timeit;blaz++);
+}
+void jumpgrid(int pass,int obsta, int npass=jackx,int obsta2=0)    //game-2 grid
+{
+ for(int p=0;p<jacky-2;p++)
+
+	 {for(int flun=0;flun<actualwidth;flun++)
+
+		 {
+		  if(p==jacky/2)
+		  {if(flun==actualwidth/2)
+
+				{
+				 cout<<"\t\t\t\t\tscore "<<score2;
+				 break;
+				}
+		  }
+		 else
+			 cout<<"_";
+
+		  }
+			cout<<endl;
+	}
+	  while(spot=='x')
+	  {
+		  if(kbhit())
+			{
+				switch(getch())
+				 {
+				  case 'w': if(jumppos>4)
+								 --jumppos;
+								 break;
+				  case 's': if(jumppos<jacky-1)
+								  ++jumppos;
+								  break;
+				 }
+			}else if(jumppos<jacky-1)++jumppos;break;
+	 }
+
+
+for(int q=0;q<jacky;q++)
+	{
+	  for(int v=0;v<jackx;v++)
+		{
+
+			 if(v==(npass)&&(q>=obsta2))
+				{
+
+					  if(q!=(jumppos))
+					  cout<<" !";
+					  else cout<<"!";
+
+			  }
+
+			 if((v==jackpos)&&(q==jumppos))
+			  {
+						  me=hunter(hunt);
+							cout<<me;
+
+				}
+
+
+			 if(v==(pass)&&(q>=obsta))
+				{
+
+					 if(q!=(jumppos))
+					  cout<<"!";
+					  else cout<<"!";
+
+			  }
+
+			  if((jackpos==pass&&jumppos>=obsta)||(jackpos==npass&&jumppos>=obsta2))
+				 {  gameover2=1;   }
+
+				 else cout<<" ";
+
+
+		}cout<<endl;
+
+	}
+	for(int floorz=0;floorz<actualwidth;floorz++)cout<<"#";
+
+
+}
+void highscore2()
+{    for(int long incr=0;incr<timeit;incr++);
+
+		int bing=0;
+  ifstream great("gameplayer2.dat",ios::in|ios::binary);
+			for(int fool=0;fool<actualwidth;fool++)
+			  cout<<"@";
+			  cout<<"\t\t\t\tJUMPER  JACK"<<endl;
+			  cout<<"\t\t\t\t\tHIGHSCOREs"<<endl;
+			  for(fool=0;fool<actualwidth;fool++)
+			  cout<<"@";
+				//cout<<endl;
+
+	great.seekg(0);
+	while(!great.eof()&&bing<5)
+	{
+
+		great.read((char*)&dump2,sizeof(dump2));
+			if(great.eof())break;
+			if(dump2.showscore2()!=0)
+				 {     ++bing;
+							 cout<<"\t\t*$$ "<<bing<<" $$*";
+							 dump2.showplay2();
+							for(int fool=0;fool<80;fool++)
+							  cout<<"#";
+				 }
+
+			for(incr=0;incr<timeit;incr++);
+	 }
+ if(great.eof()&&great.tellg()==0)
+				cout<<"\t\t\t\t\tNO NEW ENTRY....SORRY"<<endl;
+}
+void highscore1()
+{    for(int long incr=0;incr<timeit;incr++);
+
+		int bing=0;
+  ifstream great1("gameplayer.dat",ios::in|ios::binary);
+			for(int fool=0;fool<actualwidth;fool++)
+			  cout<<"@";
+			  cout<<"\t\t\t\tMEDIEVAL HUNTER"<<endl;
+			  cout<<"\t\t\t\t\tHIGHSCOREs"<<endl;
+			  for(fool=0;fool<actualwidth;fool++)
+			  cout<<"@";
+			  //	cout<<endl;
+
+	great1.seekg(0);
+	while(!great1.eof()&&bing<5)
+	{
+
+		great1.read((char*)&dump,sizeof(dump));
+			if(great1.eof())break;
+			if(dump.showscore()!=0)
+				 { ++bing;
+					cout<<"           *$$ "<<bing<<" $$*";
+					dump.showplayers();
+
+
+					for(int fool=0;fool<80;fool++)
+							cout<<"#";
+				  }
+
+			for(incr=0;incr<timeit;incr++);
+	 }
+ if(great1.eof()&&great1.tellg()==0)
+				cout<<"\t\t\t\tNO NEW ENTRIES...SORRY"<<endl;
+}
+
+
+int randomerx()
+{      randomize();
+	  return random(width-2+1)+2;
+}
+
+int randomery()
+{      randomize();
+
+	 return random(height-2+1)+2;
+}
+
+int mine_x()
+{      randomize();
+	 return random(width-2+1)+2;
+}
+
+int mine_y()
+{     randomize();
+	 return random(width-2+1)+2;
+}
+
+void map_x(int x,int foundy,int foundx,int deady,int deadx) //game-1 x-axis positioning
+{
+	for (int k = 0; k < width+2; k++)
+		 { cout << "#";  }
+	 cout << endl;
+
+	 for (int i = 0; i < height; i++)
+	 {
+		  for (int j = 0; j < width+2; j++)
+		  {   if(i==foundy&&j==foundx)
+			  {
+				  cout<<".";
+			  }
+			  if(i==deady&&j==deadx)                           //player death check
+					{
+						cout<<"*";
+					}
+				if (j == 0)
+					 cout <<"#";
+				if(i==y)
+				{   if(j==width-1)
+						cout<<"#";
+					if (i == y && j == x)
+					 { me=hunter(hunt);
+						cout<<me;
+					 if(y==deady&&x==deadx)
+					 {   gameover1++;}
+					  if(y==foundy&&x==foundx)
+						 score+=20;if(score>=150)clearlvl1++;
+					  }
+				}
+				if(j == width && i!=y)
+				cout<<"#";
+				else if(j==width)
+				{ if(i!=y)
+				cout<<"#";
+				}
+				else cout<<" ";
+
+
+		  }
+		  cout << endl;
+	 }
+
+	 for (int c=0;c<width+2;c++)
+		{  cout <<"#";    }
+
+
+	 cout<<endl<<endl<<endl<<"      score :- "<<score<<endl;
+							 cout<<"no. of moves:- "<<store;
+}
+
+
+void map_y(int y,int foundy,int foundx,int deady,int deadx)//game-1 y-axis positioning
+{
+ for (int k = 0; k < width+2; k++)
+		 { cout <<"#";  }
+	 cout << endl;
+
+	 for (int i = 0; i < height; i++)
+	 {
+		  for (int j = 0; j < width+2; j++)
+		  {   if(i==foundy&&j==foundx)
+					{
+						cout<<".";
+					}
+					if(i==deady&&j==deadx)                       //player death check
+					{
+						cout<<"*";
+					}
+				if (j == 0)
+					 cout <<"#";
+				if (i == y && j == x)
+				{
+						me=hunter(hunt);
+						cout<<me;
+					 if(y==deady&&x==deadx)
+					 {   gameover1++;}
+					 if(y==foundy&&x==foundx)
+						 score+=20;if(score>=150)clearlvl1++;                     
+					 cout<<setw(width-x)<<"#";
+					 break;
+					 }
+				if(j == width && i!=y)
+					cout<<"#";
+				else
+				if(j==width)
+				cout<<"#";
+				else cout<<" ";
+
+		  }
+		  cout << endl;
+	 }
+
+	 for (int c=0;c<width+2;c++)
+		 { cout << "#";  }
+
+	 cout<<endl<<endl<<endl<<"      score :- "<<score<<endl;
+	                   cout<<"no. of moves:- "<<store;
+}
+void play1()
+{
+  callcharacter();
+
+	 for (int k = 0; k < width+2; k++)              //game-2 base grid setup
+		 { cout << "#";  }
+	 cout << endl;
+
+	 for (int i = 0; i < height; i++)
+	 {
+		  for (int j = 0; j < width+2; j++)
+		  {
+				if (j == 0)
+					 cout << "#";
+				if (i == y && j == x)
+				{  me=hunter(hunt);cout<<me;
+					 cout<<setw(width-x)<<"#";
+					 break;
+
+					 }
+				if(j == width && i!=y)
+				cout<<"#";
+				else if(j==width)
+				cout<<"#";
+				else cout<<" ";
+
+
+		  }
+		  cout << endl;
+	 }
+
+	 for (int c=0;c<width+2;c++)
+		 { cout << "#"; }
+
+	 cout<<endl<<endl<<endl<<"      score :- "<<score<<endl;
+							 cout<<"no. of moves:- "<<store;
+
+
+	while(gameover1==0&&clearlvl1==0)
+	{
+	  if (kbhit())
+	 {  clrscr();
+	    store++;
+	 int fundy=randomery();
+	 int fundx=randomerx();
+	 int done_y=mine_y();
+	 int done_x=mine_x();
+		  switch (getch())
+		  {
+		  case 'a':
+				map_x(--x,fundy,fundx,done_y,done_x);
+				break;
+		  case 'd':
+				map_x(++x,fundy,fundx,done_y,done_x);
+				break;
+		  case 'w':
+				map_y(--y,fundy,fundx,done_y,done_x);
+				break;
+		  case 's':
+				map_y(++y,fundy,fundx,done_y,done_x);
+				break;
+		  case 'x':
+				break;
+			  }
+		  }
+	 }
+	 clrscr();
+	 if(gameover1!=0)
+		{
+		 cout<<"\t\t\t\tyou were blown by the deathmine"<<endl;
+		 cout<<"\t\t\t\t\tGAMEOVER"<<endl<<endl;
+		 for(int long incr=0;incr<timeit;incr++);
+		 cout<<"\t\t\t\t\twait for menu screen loading....";
+		 for(incr=0;incr<timeit;incr++);cout<<"....";
+		 score=0;
+		}
+	 if(clearlvl1!=0)
+		{ cout<<"\t\t\tcongratulation for completing level"<<endl;
+		  for(int long incr=0;incr<timeit;incr++);
+		  clearlvl1=0;
+		  score=0;
+		}
+
+}
+void play2()
+{  callcharacter();
+	 int obsta=obstacle();
+	 do{
+		 int nextobsta=newobstacle();
+			while(op>jackx-nextobsta&&gameover2==0)
+				{  clrscr();
+					--op;
+					if(op==jackpos)
+						score2+=10;
+
+					jumpgrid(op,obsta,mp);
+					for(int long blaz=0;blaz<timeit;blaz++);
+
+				}
+			 int obsta2=obstacle() ;
+			 int nextobsta2=newobstacle();
+			 while(op>0&&mp>jackx-nextobsta2&&gameover2==0)
+				{ clrscr();
+					 --mp;
+					 --op;
+				  if(mp==jackpos||op==jackpos)
+						score2+=10;
+
+					jumpgrid(op,obsta,mp,obsta2);
+					for(int long blaz=0;blaz<timeit;blaz++);
+
+				}
+			op=jackx;
+			while(mp>0&&op>0&&gameover2==0)
+					{ clrscr();
+					  --mp;
+						--op;
+					  if(mp==jackpos)
+						score2+=10;
+
+						jumpgrid(op,obsta,mp,obsta2);
+						for(int long blaz=0;blaz<timeit;blaz++);
+
+				}
+				mp=jackx;
+		 }while(jumppos>0&&gameover2==0);
+
+	 calljumpover();
+	 }
+void startup()
+{
+cout<<"\t\t\t\t\tWELCOME "<<endl;
+
+}
+
+void medieval()
+{
+							play1();
+						  if(gameover1==0)
+						  {  int long pos;
+							  ofstream fon("tempgamer.dat",ios::app|ios::binary);
+							  ifstream fin("gameplayer.dat",ios::in|ios::binary);
+						  char bigboy='y';
+						  ply.getscore(store,hunter(hunt));
+						  while(!fin.eof())
+						  { fin.read((char*)&prev,sizeof(prev));
+							if(ply.showscore()<prev.showscore())
+								{     fon.write((char*)&ply,sizeof(ply));
+										 bigboy='n';break;
+								}
+								else fon.write((char*)&prev,sizeof(prev));
+						  }
+						  if(bigboy=='y')
+						  fon.write((char*)&ply,sizeof(ply));
+						  else if(!fin.eof())
+						  {
+								while(!fin.eof())
+									 {
+										fin.read((char*)&prev,sizeof(prev));
+										fon.write((char*)&prev,sizeof(prev));
+									 }
+						  }
+							fin.close();fon.close();
+							remove("gameplayer.dat");
+							rename("tempgamer.dat","gameplayer.dat");
+
+					 }gameover1=0;
+
+}
+
+void jumper()
+{
+								play2();
+					ifstream yin("gameplayer2.dat",ios::in|ios::binary);
+					ofstream yon("tempgamer2.dat",ios::app|ios::binary);
+							char biggirl='y';
+						  ply2.getscore2(score2,hunter(hunt));
+						  while(!yin.eof())
+						  { yin.read((char*)&prev2,sizeof(prev2));
+
+							  if(ply2.showscore2()>prev2.showscore2())
+								{     yon.write((char*)&ply2,sizeof(ply2));
+										 biggirl='n';break;
+								}
+								else yon.write((char*)&prev2,sizeof(prev2));
+						  }
+						  if(biggirl=='y')
+						  yon.write((char*)&ply2,sizeof(ply2));
+						  else if(!yin.eof())
+						  {
+								while(!yin.eof())
+									 {
+										yin.read((char*)&prev2,sizeof(prev2));
+									  yon.write((char*)&prev2,sizeof(prev2));
+									 }
+						  }
+							yin.close();yon.close();
+							remove("gameplayer2.dat");
+							rename("tempgamer2.dat","gameplayer2.dat");
+
+						  gameover2=0,score2=0;
+
+
+}
+
+void SHOW()
+{
+
+				char deleting1,deleting2;
+			  int long incr;
+			 cout<<"\t\t\t\t....show scores...."<<endl<<endl;
+			 cout<<"\t\t press 1 to display medievalhunter game highscores"<<endl<<endl;
+			 cout<<"\t\t press 2 to display jumperjack game highscores"<<endl<<endl;
+			 cout<<"\t\t press 3 to go back"<<endl;
+			 cin>>choice2;
+			 clrscr();
+
+				 if(choice2==1)
+					 {
+							highscore1();
+							cout<<endl<<"press 'd' to delete all highscores....  "<<endl;
+							cin>>deleting1;
+
+							if(deleting1=='d')
+							{
+							 fstream bunty("tempit.dat",ios::out|ios::binary|ios::trunc);
+							remove("gameplayer.dat");
+							rename("tempit.dat","gameplayer.dat");
+							clrscr();
+							bunty.close();
+							}
+							cout<<"\t\t\t\tgoing back to menu";
+							for(incr=0;incr<timeit;incr++);
+					 }
+
+				else if(choice2==2)
+						{
+							highscore2();
+							cout<<endl<<"press 'd' to delete all highscores....  "<<endl;
+							cin>>deleting2;
+
+							if(deleting2=='d')
+							  {
+								fstream bunty2("tempit2.dat",ios::out|ios::binary|ios::trunc);
+								remove("gameplayer2.dat");
+								rename("tempit2.dat","gameplayer2.dat");
+								clrscr();
+								bunty2.close();
+								}
+							cout<<"\t\t\t\tgoing back to menu";
+							for(incr=0;incr<timeit;incr++);
+
+						}
+
+
+}
+void menu()                                                          //main menu
+{ clrscr();
+  for(int ol=0;ol<80;ol++)
+cout<<"#";
+cout<<endl;
+cout<<"                        G         A        M         E"<<endl<<endl<<endl;
+cout<<"                             B         O         X         "<<endl<<endl;
+ for( ol=0;ol<80;ol++)
+cout<<"#";
+
+  cout<<endl<<endl;
+  cout<<"\t\t\tPLAY............press 1"<<endl;
+  cout<<"\t\t\tHIGHSCORES......press 2"<<endl;
+  cout<<"\t\t\tEXIT............press 3"<<endl<<endl<<endl<<"\t\tenter for fun  ";
+  cin>>az;
+  clrscr();
+  switch(az)
+  {
+	 case 1:      cout<<"\t\t\t\tCHOOSE GAME"<<endl<<endl;
+					  cout<<"\t\t\tpress 1 to play medieval hunter"<<endl<<endl;
+					  cout<<"\t\t\tpress 2 to play jumper jack"<<endl<<endl;
+					  cout<<"\t\t\tpress 3 to go back"<<endl;
+					  cin>>choice1;
+					  clrscr();
+					  if(choice1==1)
+								  {
+										medieval();
+								  }
+					  else if(choice1==2)
+								  {
+										jumper();
+								  }
+							break;
+	 case 2:
+		  SHOW();
+		  break;     
+  }
+
+}
+
+void main()
+{
+	startup();
+	ply.getname();
+	ply2.getname2(ply.showname1());
+  while(az!=3)
+	 {
+		  menu();
+		  store=0;
+	 }
+
+	 exit(0);
+}
+//THE END
+//THANK YOU...........DONE

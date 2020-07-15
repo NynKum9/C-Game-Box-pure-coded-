@@ -1,0 +1,193 @@
+#include<iostream.h>
+#include<stdlib.h>
+#include<string.h>
+#include<conio.h>
+#include<windows.h>
+#include<stdio.h>
+#include<time.h>
+#include<process.h>
+#include<stddef.h>
+#include<iomanip.h>
+const int width = 40;
+const int height = 20;
+int hunt;
+int x=(width/2), y=(height/2);
+int long score=0;
+void hunter(int hunt)
+{if(hunt==1)
+cout<<"o";
+else if(hunt==2)
+cout<<"H";
+else if(hunt==3)
+cout<<"X";
+}
+int randomerx()
+{randomize();
+return random(width-4+1)+4;
+}
+int randomery()
+{ randomize();
+
+return random(height-4+1)+4;
+}
+void map_x(int x)
+{   int foundy=randomery();
+int foundx=randomerx();
+	for (int k = 0; k < width+2; k++)
+		 { cout << "#";  }
+	 cout << endl;
+
+	 for (int i = 0; i < height; i++)
+	 {
+		  for (int j = 0; j < width+2; j++)
+		  {   if(i==foundy&&j==foundx)
+		  cout<<".";
+				if (j == 0)
+					 cout << "#";
+				if(i==y)
+				{   if(j==width-1)
+						cout<<"#";
+					if (i == y && j == x)
+					 { hunter(hunt);
+					  if(y==foundy&&x==foundx)
+						 score+=20;
+					  }
+				}
+				if(j == width && i!=y)
+				cout<<"#";
+				else if(j==width)
+				{ if(i!=y)
+				cout<<"#";
+				}
+				else cout<<" ";
+
+
+		  }
+		  cout << endl;
+	 }
+
+	 for (int c=0;c<width+2;c++)
+		{  cout << "#";    }
+
+
+	 cout<<endl<<endl<<endl<<"          "<<score;
+}
+void map_y(int y)
+{
+ for (int k = 0; k < width+2; k++)
+		 { cout << "#";  }
+	 cout << endl;
+
+	 for (int i = 0; i < height; i++)
+	 {
+		  for (int j = 0; j < width+2; j++)
+		  {
+				if (j == 0)
+					 cout << "#";
+				if (i == y && j == x)
+				{
+					 hunter(hunt);
+					 cout<<setw(width-x)<<"#";
+					 break;
+					 }
+				if(j == width && i!=y)
+					cout<<"#";
+				else
+				if(j==width)
+				cout<<"#";
+				else cout<<" ";
+
+		  }
+		  cout << endl;
+	 }
+
+	 for (int c=0;c<width+2;c++)
+		 { cout << "#";  }
+
+	 cout<<endl<<endl<<endl;
+}
+int main()
+{
+	 char m='a';
+	 cout<<"enter 1 if you want hunter SUBZERO the freezer..........'O'"<<endl;
+	 cout<<"enter 2 if you want hunter HELIX the barbarian..........'H'"<<endl;
+	 cout<<"enter 3 if you want hunter AGENT X the secret agent.....'X'"<<endl;
+	 cin>> hunt;
+	 cout<<"your have selected ";
+	 switch(hunt)
+	 {case 1: cout<<"SUBZERO";
+	 case 2: cout<<"HELIX";
+	 case 3: cout<<"AGENT X";
+	 }
+	 cout<<endl<<"wait for loading";
+	 for(long int incr=0;incr<99999999;incr++);cout<<"..";
+	 for(incr=0;incr<99999999;incr++);cout<<"...";
+	 for(incr=0;incr<99999999;incr++);
+	 clrscr();
+
+	 // int x=(width/2), y=(height/2);
+
+
+
+	 for (int k = 0; k < width+2; k++)
+		 { cout << "#";  }
+	 cout << endl;
+
+	 for (int i = 0; i < height; i++)
+	 {
+		  for (int j = 0; j < width+2; j++)
+		  {
+				if (j == 0)
+					 cout << "#";
+				if (i == y && j == x)
+				{  hunter(hunt);
+					 cout<<setw(width-x)<<"#";
+					 break;
+					
+					 }
+				if(j == width && i!=y)
+				cout<<"#";
+				else if(j==width)
+				cout<<"#";
+				else cout<<" ";
+
+
+		  }
+		  cout << endl;
+	 }
+
+	 for (int c=0;c<width+2;c++)
+		 { cout << "#"; }
+
+	 cout<<endl<<endl<<endl;
+
+
+	while(m=='a'||m=='s'||m=='d'||m=='w')
+	{
+	  if (kbhit())
+	 {  clrscr();
+		  switch (getch())
+		  {
+		  case 'a':
+				map_x(x--);
+				break;
+		  case 'd':
+				map_x(x++);
+				break;
+		  case 'w':
+				map_y(y--);
+				break;
+		  case 's':
+				map_y(y++);
+				break;
+		  case 'x':
+				//gameOver = true;
+				break;
+			  }
+
+
+
+		  }
+	 }
+	  return 0;
+}
